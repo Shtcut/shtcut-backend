@@ -52,7 +52,10 @@ const VCardFrame = () => {
                     </div>
                     <section className="flex gap-2 w-full">
                         {contactActions.map((_c) => (
-                            <Card className="bg-white w-full shadow-sm h-11  flex flex-col items-center justify-center rounded-md">
+                            <Card
+                                className="bg-white w-full shadow-sm h-11  flex flex-col items-center justify-center rounded-md"
+                                key={_c.name}
+                            >
                                 <div className="text-[#0D2C7A]">{_c.icon}</div>
                                 <p className="text-[10px] font-medium text-[#0D2C7A]">{_c.name}</p>
                             </Card>

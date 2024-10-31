@@ -10,7 +10,7 @@ const QrCodeContactInfo = ({ isVisible, toggleVisibility }: { isVisible: boolean
         <Card className="shadow-sm mt-4 py-4 px-6 border border-gray-100 ">
             <section className="flex justify-between ">
                 <section className="flex flex-col gap-2">
-                    <Label>Contact Information's</Label>
+                    <Label>Contact Information&apos;s</Label>
                     <p className="text-sm text-[#5A5555]">Enter details</p>
                 </section>
                 {isVisible ? (

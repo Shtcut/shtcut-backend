@@ -19,7 +19,7 @@ const MultiLinkStep1 = () => {
                 <p className="text-sm font-medium"> {qrCodeName ? String(qrCodeName) : 'Title'}</p>
                 <section className="w-full flex flex-col gap-2">
                     {[1, 2].map((index) => (
-                        <section className="h-10 w-full rounded-lg border flex items-center px-2 gap-2">
+                        <section className="h-10 w-full rounded-lg border flex items-center px-2 gap-2" key={index}>
                             <LucideImage color="#B5B3B3" size={16} />
                             <p>Link {index + 1}</p>
                         </section>
