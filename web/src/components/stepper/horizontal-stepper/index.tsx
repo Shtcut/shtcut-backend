@@ -3,7 +3,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 
-const Stepper = ({ step }: { step: number | undefined }) => {
+const Stepper = ({ step }: { step: any }) => {
     return (
         <div className="">
             <div className="mx-auto p-4  sm:w-full ">

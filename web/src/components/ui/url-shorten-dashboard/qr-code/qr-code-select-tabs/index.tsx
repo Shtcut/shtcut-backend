@@ -4,22 +4,9 @@ import { PiFilePdfDuotone } from 'react-icons/pi';
 import { PiIdentificationCard } from 'react-icons/pi';
 import React from 'react';
 import WebsiteComponent from '../website-component';
-import { PropsColor } from '@shtcut/types/types';
+import { QrCodeInterface } from '@shtcut/types/types';
 
-const QrCodeSelectTabs = ({
-    btnColor,
-    setBtnColor,
-
-    step,
-    handleInputChange,
-    qrCodeName,
-    setSelectedFrame,
-
-    selectedFrame,
-
-    handleEyeRadiusChange,
-    handleTabChange
-}: PropsColor) => {
+const QrCodeSelectTabs = ({ handleTabChange, step }: QrCodeInterface) => {
     return (
         <div>
             <Tabs defaultValue="website" className="w-full">
@@ -62,16 +49,7 @@ const QrCodeSelectTabs = ({
                 </TabsList>
                 <div className="mt-32  ">
                     <TabsContent value="website">
-                        <WebsiteComponent
-                            step={step}
-                            setBtnColor={setBtnColor}
-                            btnColor={btnColor}
-                            handleInputChange={handleInputChange}
-                            qrCodeName={qrCodeName}
-                            setSelectedFrame={setSelectedFrame}
-                            selectedFrame={selectedFrame}
-                            handleEyeRadiusChange={handleEyeRadiusChange}
-                        />
+                        <WebsiteComponent step={step} />
                     </TabsContent>
                     <TabsContent value="multi">multi</TabsContent>
                     <TabsContent value="pdf">pdf</TabsContent>

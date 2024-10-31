@@ -1,18 +1,24 @@
+import { setEyeRadius } from '@shtcut/redux/slices/qr-code';
 import React from 'react';
 import ColorPicker from 'react-pick-color';
+import { useDispatch } from 'react-redux';
 
 type IProps = {
     showColorPicker: boolean;
     setShowColorPicker: (color: boolean) => void;
     colorPickerRef: any;
-    handleEyeRadiusChange?: (outer: number, inner: number) => void;
 };
 
-const AllShapes = ({ setShowColorPicker, showColorPicker, colorPickerRef, handleEyeRadiusChange }: IProps) => {
+const AllShapes = ({ setShowColorPicker, showColorPicker, colorPickerRef }: IProps) => {
+    const dispatch = useDispatch();
     const handleClickEyeRadius = (outer: number, inner: number) => {
-        if (handleEyeRadiusChange) {
-            handleEyeRadiusChange(outer, inner);
-        }
+        dispatch(
+            setEyeRadius([
+                { outer, inner },
+                { outer, inner },
+                { outer, inner }
+            ])
+        );
     };
     return (
         <div>

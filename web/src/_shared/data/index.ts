@@ -389,9 +389,14 @@ export const logos = [
         logoUrl: '/logos/simple-icons_icloud.png'
     },
     {
-        id: '8',
+        id: '9',
         name: 'scan',
         logoUrl: '/logos/Scan.png'
+    },
+    {
+        id: '10',
+        name: 'skype',
+        logoUrl: '/logos/logos_skype.png'
     }
 ];
 export const postData_2 = [
@@ -1077,4 +1082,3 @@ export const initialColumns: Columns = {
         ]
     }
 };
-

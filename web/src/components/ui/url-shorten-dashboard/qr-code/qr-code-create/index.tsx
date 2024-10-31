@@ -1,85 +1,123 @@
 import { Button, Modal, Tabs, TabsContent, TabsList, TabsTrigger } from '@shtcut-ui/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { QrCodeInterface } from '@shtcut/types/types';
-import { Frame_5, Frame_1, Frame_8, Frame_2, Frame_6, Frame_9, Frame_7, Frame_3, Frame_4 } from '../qr-code-frames';
 import Image from 'next/image';
 import DownloadBtn from './download-btn';
 import { Link, List } from 'lucide-react';
 import { PiFilePdfDuotone, PiIdentificationCard } from 'react-icons/pi';
 import WebsiteComponent from '../website-component';
 import { useSelector } from 'react-redux';
-import { qrCodeSelectors } from '@shtcut/redux/slices/qr-code';
+import { nextStep, prevStep, qrCodeSelectors, resetState } from '@shtcut/redux/slices/qr-code';
+import FrameComponents from './qr-code-frames';
+import MultiLinksComponent from '../multi-link-components';
+import QrCodePreviewPhones from './qr-code-phones';
+import { useDispatch } from 'react-redux';
+import PdfQrCodeComponent from '../pdf-qr-code';
+import VCardComponent from '../vcard-component';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-const QRCodeCreateComponent = ({
-    step,
-    onNextStep,
-    onPrevStep,
-    btnColor,
-    setBtnColor,
-    qrCodeName,
-    handleInputChange,
-    selectedFrame,
-    setSelectedFrame,
-    eyeRadius,
-    handleEyeRadiusChange,
-    saveModal,
-    setSaveModal
-}: QrCodeInterface) => {
+const QRCodeCreateComponent = ({ saveModal, setSaveModal }: QrCodeInterface) => {
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const getParams = useSearchParams();
+    const tabParams = getParams.get('tabs');
+    const step = useSelector(qrCodeSelectors.selectStep);
+    const selectedColor = useSelector(qrCodeSelectors.selectSelectedColor);
+    const btnColor = useSelector(qrCodeSelectors.selectBtnColor);
+    const bgColor = useSelector(qrCodeSelectors.selectBgColor);
+    const qrCodeName = useSelector(qrCodeSelectors.selectQrCodeName);
     const qrCodeLogo = useSelector(qrCodeSelectors.selectQrCodeLogo);
-    const [switchTab, setSwitchTab] = useState<string>('website');
+    const selectedFrame = useSelector(qrCodeSelectors.selectSelectedFrame);
+    const qrCodeShape = useSelector(qrCodeSelectors.selectQrCodeShape);
+    const eyeRadius = useSelector(qrCodeSelectors.selectEyeRadius);
+    const image = useSelector(qrCodeSelectors.selectImage);
+    const initialTab = tabParams ? (tabParams as string) : 'website';
+    const [switchTab, setSwitchTab] = useState<string>(initialTab);
+    const qrCodeRef = useRef(null);
     const handleTabChange = (tabs: string) => {
         setSwitchTab(tabs);
+        dispatch(resetState());
     };
-    const qrCodeRef = useRef(null);
-    const renderFrame = () => {
-        switch (selectedFrame) {
-            case 1:
-                return <Frame_1 eyeRadius={eyeRadius} />;
-            case 2:
-                return <Frame_2 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            case 3:
-                return <Frame_3 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            case 4:
-                return <Frame_4 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            case 5:
-                return <Frame_5 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            case 6:
-                return <Frame_6 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            case 7:
-                return <Frame_7 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            case 8:
-                return <Frame_8 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            case 9:
-                return <Frame_9 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
-            default:
-                return <Frame_5 qrCodeName={qrCodeName} btnColor={btnColor} eyeRadius={eyeRadius} />;
+
+    const handleNextStep = () => {
+        dispatch(nextStep());
+    };
+
+    const handlePrevStep = () => {
+        dispatch(prevStep());
+    };
+    const handleSave = () => {
+        setSaveModal(true);
+        const qrCodeData = {
+            step,
+            selectedColor,
+            btnColor,
+            bgColor,
+            qrCodeName,
+            qrCodeLogo,
+            selectedFrame,
+            qrCodeShape,
+            eyeRadius,
+            image
+        };
+    };
+    const tabData = [
+        {
+            value: 'website',
+            label: 'Website URL',
+            icon: <Link size={16} />
+        },
+        {
+            value: 'multi',
+            label: 'Multi links',
+            icon: <List size={18} />
+        },
+        {
+            value: 'pdf',
+            label: 'PDF',
+            icon: <PiFilePdfDuotone size={18} />
+        },
+        {
+            value: 'vCard',
+            label: 'vCard ',
+            icon: <PiIdentificationCard size={18} />
         }
-    };
+    ];
+
+    useEffect(() => {
+        if (switchTab) {
+            router.push(`?tabs=${switchTab}`, {
+                shallow: true
+            } as any);
+        }
+    }, [switchTab]);
 
     return (
         <div className=" ">
             <div className="flex justify-between  items-center">
                 <h1 className="font-semibold text-[#2B2829] text-xl">Create QR Codes</h1>
                 <div className="flex items-center gap-x-3">
-                    {step && step > 1 && (
+                    {Number(step) > 1 && (
                         <Button
-                            onClick={onPrevStep}
-                            className="bg-primary-0 flex justify-center w-28 items-center h-8 text-xs rounded gap-x-2"
+                            onClick={handlePrevStep}
+                            className="flex justify-center w-28 items-center h-8 text-xs rounded gap-x-2"
+                            variant={'outline'}
                         >
                             Back
                         </Button>
                     )}
+
                     <Button
                         onClick={() => {
-                            if (step && step > 2) {
-                                setSaveModal(true);
-                            } else if (onNextStep) {
-                                onNextStep();
+                            if (step && Number(step) > 2) {
+                                handleSave();
+                            } else if (handleNextStep) {
+                                handleNextStep();
                             }
                         }}
                         className="bg-primary-0 flex justify-center w-28 h-8 text-xs rounded items-center gap-x-2"
                     >
-                        {step && step > 2 ? 'Save' : ' Next'}
+                        {step && Number(step) > 2 ? 'Save' : ' Next'}
                     </Button>
                 </div>
             </div>
@@ -87,80 +125,52 @@ const QRCodeCreateComponent = ({
                 <div className="w-full">
                     <div className="">
                         <div>
-                            <Tabs defaultValue="website" className="w-full">
-                                <TabsList className="block border-none bg-transparent gap-0 m-0 p-0 ">
-                                    <section className="bg-white shadow-sm border border-gray-100  rounded-[10px] p-[23px]">
+                            <Tabs
+                                defaultValue={switchTab}
+                                className="w-full"
+                                onValueChange={(value) => {
+                                    setSwitchTab(value);
+                                }}
+                            >
+                                <TabsList className="block border-none bg-transparent gap-0 m-0 p-0">
+                                    <section className="bg-white shadow-sm border border-gray-100 rounded-[10px] p-[23px]">
                                         <h2 className="font-medium mb-[22px] text-[#151314]">Select QR Code Type</h2>
-                                        <section className=" w-full gap-x-[10px] flex flex-1">
-                                            <TabsTrigger
-                                                className="border shadow-none text-black/60 h-9 w-32 data-[state=active]:text-primary-0 data-[state=active]:border-primary-0 text-xs flex items-center justify-center gap-x-2 data-[state=active]:shadow-none"
-                                                value="website"
-                                                onClick={() => handleTabChange('website')}
-                                            >
-                                                <div>
-                                                    <Link size={16} />
-                                                </div>{' '}
-                                                Website URL
-                                            </TabsTrigger>
-                                            <TabsTrigger
-                                                className="border shadow-none text-black/60 h-9 w-32 data-[state=active]:text-primary-0 data-[state=active]:border-primary-0 text-xs flex items-center justify-center gap-x-2 data-[state=active]:shadow-none"
-                                                value="multi"
-                                                onClick={() => handleTabChange('multi')}
-                                            >
-                                                <List size={18} /> Multi links
-                                            </TabsTrigger>
-                                            <TabsTrigger
-                                                value="pdf"
-                                                className="border shadow-none text-black/60 h-9 w-32 data-[state=active]:text-primary-0 data-[state=active]:border-primary-0 text-xs flex items-center justify-center gap-x-2 data-[state=active]:shadow-none"
-                                            >
-                                                <PiFilePdfDuotone size={18} /> PDF
-                                            </TabsTrigger>
-                                            <TabsTrigger
-                                                value="vCard"
-                                                className="border shadow-none text-black/60 h-9 w-32 data-[state=active]:text-primary-0 data-[state=active]:border-primary-0 text-xs flex items-center justify-center gap-x-2 data-[state=active]:shadow-none"
-                                                onClick={() => handleTabChange('vCard')}
-                                            >
-                                                <PiIdentificationCard size={18} /> vCard Plus
-                                            </TabsTrigger>
+                                        <section className="w-full gap-x-[10px] flex flex-1">
+                                            {tabData.map((tab) => (
+                                                <TabsTrigger
+                                                    key={tab.value}
+                                                    className="border shadow-none text-black/60 h-9 w-32 data-[state=active]:text-primary-0 data-[state=active]:border-primary-0 text-xs flex items-center justify-center gap-x-2 data-[state=active]:shadow-none"
+                                                    value={tab.value}
+                                                    onClick={() => handleTabChange(tab.value)}
+                                                >
+                                                    {tab.icon}
+                                                    {tab.label}
+                                                </TabsTrigger>
+                                            ))}
                                         </section>
                                     </section>
                                 </TabsList>
-                                <div className="mt-32  ">
+                                <div className="mt-32">
                                     <TabsContent value="website">
-                                        <WebsiteComponent
-                                            step={step}
-                                            setBtnColor={setBtnColor}
-                                            btnColor={btnColor}
-                                            handleInputChange={handleInputChange}
-                                            qrCodeName={qrCodeName}
-                                            setSelectedFrame={setSelectedFrame}
-                                            selectedFrame={selectedFrame}
-                                            handleEyeRadiusChange={handleEyeRadiusChange}
-                                        />
+                                        <WebsiteComponent step={Number(step)} />
                                     </TabsContent>
-                                    <TabsContent value="multi">multi</TabsContent>
-                                    <TabsContent value="pdf">pdf</TabsContent>
-                                    <TabsContent value="vCard">vCard</TabsContent>
+                                    <TabsContent value="multi">
+                                        <MultiLinksComponent step={step} />
+                                    </TabsContent>
+                                    <TabsContent value="pdf">
+                                        <PdfQrCodeComponent step={Number(step)} />
+                                    </TabsContent>
+                                    <TabsContent value="vCard">
+                                        <VCardComponent step={step} />
+                                    </TabsContent>
                                 </div>
                             </Tabs>
                         </div>
                     </div>
                 </div>
-                <div className="bg-white w-1/2 shadow-sm border border-gray-100 rounded-[10px] h-full p-[23px]">
-                    <h2 className=" font-medium ">Preview</h2>
-                    <div className="border w-56 h-[454px] border-[#A6A6A4] p-[1px] mt-10 mx-auto rounded-[37px]">
-                        <div
-                            className={`flex border-4 border-black flex-col   w-full h-full justify-center items-center rounded-[37px] `}
-                        >
-                            <div className="bg-black w-12 h-4 flex justify-end items-center px-2 mt-2 rounded-full">
-                                <div className="w-1 h-1 bg-slate-500 rounded-full" />
-                            </div>
-
-                            <div className="flex-1 h-full">
-                                {switchTab === 'website' ? renderFrame() : switchTab === 'multi' ? renderFrame() : null}{' '}
-                            </div>
-                        </div>
-                    </div>
+                <div className="bg-white w-1/2 sticky top-0 shadow-sm border border-gray-100 rounded-[10px] h-[640px] p-[23px]">
+                    <h2 className=" font-semibold ">Preview</h2>
+                    <QrCodePreviewPhones switchTab={switchTab} />
                 </div>
             </div>
             <Modal
@@ -175,7 +185,7 @@ const QRCodeCreateComponent = ({
                         <p className="font-semibold ">Download QR Code</p>
                     </div>
                     <div className="w-fit h-40" ref={qrCodeRef}>
-                        {renderFrame()}
+                        <FrameComponents />
                     </div>
                     <div className="flex mt-10 items-center w-full gap-4">
                         <Button variant={'outline'} className="w-full h-8 text-xs" onClick={() => setSaveModal(false)}>

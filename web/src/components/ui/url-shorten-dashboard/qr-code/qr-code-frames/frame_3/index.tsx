@@ -1,14 +1,17 @@
 import { qrCodeSelectors } from '@shtcut/redux/slices/qr-code';
-import { QrCodeFrameType } from '@shtcut/types/types';
 import React from 'react';
 import { QRCode } from 'react-qrcode-logo';
 import { useSelector } from 'react-redux';
-
-const Frame_3 = ({ btnColor, qrCodeName, eyeRadius }: QrCodeFrameType) => {
+import { EyeRadiusType } from '@shtcut/types/types';
+const Frame_3 = () => {
     const selectedColor = useSelector(qrCodeSelectors.selectSelectedColor);
     const qrCodeLogo = useSelector(qrCodeSelectors.selectQrCodeLogo);
     const qrCodeShape = useSelector(qrCodeSelectors.selectQrCodeShape);
     const bgColor = useSelector(qrCodeSelectors.selectBgColor);
+    const btnColor = useSelector(qrCodeSelectors.selectBtnColor);
+    const qrCodeName = useSelector(qrCodeSelectors.selectQrCodeName);
+    const eyeRadius = useSelector(qrCodeSelectors.selectEyeRadius);
+
     return (
         <div className="flex flex-col justify-center items-center flex-1 h-full  w-full">
             <div className="flex justify-center items-center   relative ">
@@ -53,14 +56,14 @@ const Frame_3 = ({ btnColor, qrCodeName, eyeRadius }: QrCodeFrameType) => {
                         logoHeight={30}
                         logoImage={String(qrCodeLogo)}
                         // qrStyle="dots"
-                        eyeRadius={eyeRadius}
+                        eyeRadius={eyeRadius as EyeRadiusType}
                         qrStyle={qrCodeShape as 'squares' | 'dots' | 'fluid'}
                     />
                 </div>
             </div>
             <div className="relative top-20">
-                <p style={{ color: btnColor ? btnColor : 'white' }} className={`text-sm uppercase`}>
-                    {qrCodeName ? qrCodeName : 'SCAN ME'}
+                <p style={{ color: btnColor ? String(btnColor) : 'white' }} className={`text-sm uppercase`}>
+                    {qrCodeName ? String(qrCodeName) : 'SCAN ME'}
                 </p>
             </div>
         </div>

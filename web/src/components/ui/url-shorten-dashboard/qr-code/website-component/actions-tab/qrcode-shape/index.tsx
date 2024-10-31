@@ -6,11 +6,7 @@ import { QrCodeShape } from '@shtcut/types/types';
 import { useDispatch } from 'react-redux';
 import { setQrCodeShape } from '@shtcut/redux/slices/qr-code';
 
-const QrCodeShapes = ({
-    handleEyeRadiusChange
-}: {
-    handleEyeRadiusChange?: (outer: number, inner: number) => void;
-}) => {
+const QrCodeShapes = () => {
     const dispatch = useDispatch();
     const [showColorPicker, setShowColorPicker] = useState(false);
     const colorPickerRef = useRef<HTMLDivElement | null>(null);
@@ -29,6 +25,7 @@ const QrCodeShapes = ({
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showColorPicker]);
+
     const handleShapeChange = (shape: QrCodeShape) => {
         dispatch(setQrCodeShape(shape));
     };
@@ -95,7 +92,6 @@ const QrCodeShapes = ({
                     colorPickerRef={colorPickerRef}
                     setShowColorPicker={setShowColorPicker}
                     showColorPicker={showColorPicker}
-                    handleEyeRadiusChange={handleEyeRadiusChange}
                 />
             </section>
         </div>

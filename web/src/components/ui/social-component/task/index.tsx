@@ -99,7 +99,8 @@ const TaskComponent = () => {
                     </Button>
                 </section>
             </section>
-            <section className="flex items-center justify-between border-b py-3">
+
+            <section className="flex items-center justify-between border-b py-3 mt-10">
                 <div className="flex items-center gap-x-6">
                     {actionsData.map((data) => (
                         <section

@@ -11,7 +11,9 @@ interface QrCodeState {
     qrCodeLogo?: string;
     selectedFrame: number;
     qrCodeShape: QrCodeShape;
-    // eyeRadius: EyeRadiusType;
+    step: number;
+    eyeRadius: EyeRadiusType;
+    image: string;
 }
 
 const initialState: QrCodeState = {
@@ -21,14 +23,23 @@ const initialState: QrCodeState = {
     qrCodeName: '',
     qrCodeLogo: undefined,
     selectedFrame: 1,
-    qrCodeShape: 'squares'
-    // eyeRadius: [{ outer: 8, inner: 4 }]
+    qrCodeShape: 'squares',
+    step: 1,
+    image: '',
+    eyeRadius: [
+        { outer: 8, inner: 4 },
+        { outer: 8, inner: 4 },
+        { outer: 8, inner: 4 }
+    ]
 };
 
 const qrCodeSlice = createSlice({
     name: 'qrCode',
     initialState,
     reducers: {
+        resetState: (state) => {
+            return initialState;
+        },
         setSelectedColor: (state, action: PayloadAction<string>) => {
             state.selectedColor = action.payload;
         },
@@ -49,10 +60,22 @@ const qrCodeSlice = createSlice({
         },
         setQrCodeShape: (state, action: PayloadAction<QrCodeShape>) => {
             state.qrCodeShape = action.payload;
+        },
+        setImage: (state, action: PayloadAction<string>) => {
+            state.image = action.payload;
+        },
+        setStep: (state, action: PayloadAction<number>) => {
+            state.step = action.payload;
+        },
+        nextStep: (state) => {
+            state.step += 1;
+        },
+        prevStep: (state) => {
+            state.step = Math.max(state.step - 1, 1);
+        },
+        setEyeRadius: (state, action: PayloadAction<EyeRadiusType>) => {
+            state.eyeRadius = action.payload;
         }
-        // setEyeRadius: (state, action: PayloadAction<EyeRadiusType>) => {
-        //     state.eyeRadius = action.payload;
-        // }
     }
 });
 
@@ -63,8 +86,13 @@ export const {
     setQrCodeName,
     setQrCodeLogo,
     setSelectedFrame,
-    setQrCodeShape
-    // setEyeRadius
+    setQrCodeShape,
+    setEyeRadius,
+    setStep,
+    nextStep,
+    prevStep,
+    resetState,
+    setImage
 } = qrCodeSlice.actions;
 
 export default qrCodeSlice.reducer;
@@ -80,6 +108,8 @@ export const qrCodeSelectors = {
     selectQrCodeName: createSelector('qrCodeName'),
     selectQrCodeLogo: createSelector('qrCodeLogo'),
     selectSelectedFrame: createSelector('selectedFrame'),
-    selectQrCodeShape: createSelector('qrCodeShape')
-    // selectEyeRadius: createSelector('eyeRadius')
+    selectQrCodeShape: createSelector('qrCodeShape'),
+    selectStep: createSelector('step'),
+    selectEyeRadius: createSelector('eyeRadius'),
+    selectImage: createSelector('image')
 };

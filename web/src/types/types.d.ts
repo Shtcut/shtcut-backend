@@ -70,36 +70,15 @@ export type EyeRadiusType = [
 
 interface QrCodeInterface {
     step?: number;
-    setStep?: Dispatch<SetStateAction<number>>;
-    onPrevStep?: () => void;
-    onNextStep?: (() => void) | undefined;
-    selectedColor?: string;
-    btnColor?: string;
-    selectedFrame?: number;
-    setSelectedFrame?: (val: number) => void;
-    setBtnColor?: Dispatch<SetStateAction<string>>;
-    qrCodeName?: string;
-    setQrCodeName?: Dispatch<SetStateAction<string>>;
-    handleInputChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    eyeRadius?: EyeRadiusType;
-    handleEyeRadiusChange?: (outer: number, inner: number) => void;
     saveModal?: boolean;
     setSaveModal?: Dispatch<SetStateAction<boolean>>;
-}
-
-export interface PropsColor extends QrCodeInterface {
-    setBtnColor?: Dispatch<SetStateAction<string>>;
-    btnColor?: string;
-    setSelectedFrame?: Dispatch<SetStateAction<number>>;
-    selectedFrame?: number;
     handleTabChange?: Dispatch<SetStateAction<string>>;
 }
 
 export interface QrCodeFrameType {
     bgColor?: string | undefined;
     selectedColor?: string | undefined;
-    btnColor?: string | undefined;
-    qrCodeName?: string | undefined;
+    qrCodeName?: string;
     qrCodeLogo?: string;
     qrCodeShape?: QrCodeShape;
     eyeRadius?: EyeRadiusType;
@@ -231,3 +210,16 @@ type TextSliceIProps = {
     text: string;
     wordLimit: number;
 };
+
+interface QrCodeHeaderTypes {
+    label: string;
+    description: string;
+    isVisible: boolean;
+    toggleVisibility: () => void;
+    titleValue: string;
+    descriptionValue: string;
+    handleTitleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleDescriptionChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    selectedImage: string | null;
+    handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}

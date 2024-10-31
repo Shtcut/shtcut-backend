@@ -1,62 +1,11 @@
 import QRCodeCreateComponent from '@shtcut/components/ui/url-shorten-dashboard/qr-code/qr-code-create';
-import { EyeRadiusType, QrCodeShape } from '@shtcut/types/types';
+import { EyeRadiusType } from '@shtcut/types/types';
 import React, { useState } from 'react';
 
 const QRCodeCreateContainer = () => {
     const [saveModal, setSaveModal] = useState(false);
-    const [step, setStep] = useState<number>(1);
 
-    const [btnColor, setBtnColor] = useState<string>('#000000');
-
-    const [qrCodeName, setQrCodeName] = useState<string>('');
-
-    const [selectedFrame, setSelectedFrame] = useState(1);
-
-    const [eyeRadius, setEyeRadius] = useState<EyeRadiusType>([
-        { outer: 8, inner: 4 },
-        { outer: 8, inner: 4 },
-        { outer: 8, inner: 4 }
-    ]);
-
-    const handleEyeRadiusChange = (outer: number, inner: number) => {
-        setEyeRadius([
-            { outer, inner },
-            { outer, inner },
-            { outer, inner }
-        ]);
-    };
-
-    const onNextStep = () => {
-        setStep((prevStep) => prevStep + 1);
-    };
-
-    const onPrevStep = () => {
-        setStep((prevStep) => prevStep - 1);
-    };
-
-    const handleInputChange = (event) => {
-        setQrCodeName(event.target.value);
-    };
-
-    return (
-        <QRCodeCreateComponent
-            onPrevStep={onPrevStep}
-            onNextStep={onNextStep}
-            step={step}
-            setStep={setStep}
-            btnColor={btnColor}
-            setBtnColor={setBtnColor}
-            qrCodeName={qrCodeName}
-            setQrCodeName={setQrCodeName}
-            handleInputChange={handleInputChange}
-            setSelectedFrame={setSelectedFrame}
-            selectedFrame={selectedFrame}
-            eyeRadius={eyeRadius}
-            handleEyeRadiusChange={handleEyeRadiusChange}
-            saveModal={saveModal}
-            setSaveModal={setSaveModal}
-        />
-    );
+    return <QRCodeCreateComponent saveModal={saveModal} setSaveModal={setSaveModal} />;
 };
 
 export default QRCodeCreateContainer;
